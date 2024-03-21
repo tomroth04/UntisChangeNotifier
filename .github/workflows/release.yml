@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21.1
+
+      - uses: ko-build/setup-ko@v0.6
+      - env:
+          auth_token: ${{ secrets.DH_PASSWORD }}
+        run: |
+          echo "${DH_PASSWORD}" | ko login https://hub.docker.io --username "$DH_USER" --password-stdin
+          ko build
