@@ -5,15 +5,31 @@ import (
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
+	"time"
+	_ "time/tzdata"
 )
 
-// TODO: Modular config loading
-// TODO: variables to add: authtype, username, password,school, notification url, secret, refresh interval
+// TODO: handle mandatory env variables not being set
 
 // Global shutdown signal channel
 var shutdownSignal chan os.Signal
 
 func main() {
+	timezone := os.Getenv("TZ")
+	if timezone == "" {
+		slog.Warn("TZ environment variable not set. Defaulting to Europe/Berlin")
+		timezone = "Europe/Berlin"
+	} else {
+		slog.Info("TZ environment variable set to", "timezone", timezone)
+	}
+
+	location, err := time.LoadLocation(timezone)
+	if err != nil {
+		panic(err)
+	}
+	time.Local = location // Set the default local timezone
+	slog.Info("Local timezone set to", "timezone", time.Local)
+
 	// Initialize shutdown signal channel
 	shutdownSignal = make(chan os.Signal, 1)
 
