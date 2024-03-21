@@ -1,0 +1,5 @@
+defaultPlatforms:
+  - linux/arm64
+  - linux/amd64
+
+KO_DOCKER_REPO: docker.io/tomroth/untis-notifier
