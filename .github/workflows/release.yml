@@ -21,5 +21,6 @@ jobs:
       - env:
           auth_token: ${{ secrets.DH_PASSWORD }}
         run: |
-          echo "${DH_PASSWORD}" | ko login https://hub.docker.io --username "$DH_USER" --password-stdin
-          ko build
+          echo "${DH_PASSWORD}" | ko login index.docker.io --username "$DH_USER" --password-stdin
+          ko build . --bare --sbom=none
+
